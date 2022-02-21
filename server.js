@@ -1,6 +1,6 @@
-//  used for generating errors for Node. js:
+//  used for generating errors for Node.js:
 var createError = require("http-errors");
-// node.js framework
+// node.js framework:
 var express = require("express");
 // provides a lot of very useful functionality to access and interact with the file system:
 var path = require("path");
@@ -8,7 +8,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 // A simple multi-level logger for console, file, and rolling file appenders.
 var logger = require("morgan");
-// To be able to use
+// To be able to use all kinds of http requests:
 const methodOverride = require("method-override");
 // to comunicate and interact with our mongodb database
 const mongoose = require("mongoose");
