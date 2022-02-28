@@ -12,10 +12,11 @@ var logger = require("morgan");
 const methodOverride = require("method-override");
 // to comunicate and interact with our mongodb database
 const mongoose = require("mongoose");
+// Mongoose database connection:
+require("./config/database");
 
 // Routers:
 var indexRouter = require("./routes/index");
-const yelpcampRouter = require("./routes/yelpcamp");
 
 // creating the app:
 var app = express();
@@ -34,7 +35,6 @@ app.use(methodOverride("_method"));
 
 // Main routes:
 app.use("/", indexRouter);
-app.use("/yelpcamphome", yelpcampRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
