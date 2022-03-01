@@ -16,7 +16,8 @@ const mongoose = require("mongoose");
 require("./config/database");
 
 // Routers:
-var indexRouter = require("./routes/index");
+var homeRouter = require("./routes/home");
+const campgroundsRouter = require("./routes/campgrounds");
 
 // creating the app:
 var app = express();
@@ -34,7 +35,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
 
 // Main routes:
-app.use("/", indexRouter);
+app.use("/", homeRouter);
+app.use("/campgrounds", campgroundsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
