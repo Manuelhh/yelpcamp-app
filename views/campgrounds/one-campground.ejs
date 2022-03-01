@@ -10,5 +10,21 @@
     <h1>Page for one campground</h1>
     <h2>Title Of Campground <%= oneCampground.title %></h2>
     <h3>Location: <%= oneCampground.location %></h3>
+    <div>
+      <a href="/campgrounds/<%=oneCampground._id%>/edit"
+        >Edit this campground</a
+      >
+    </div>
+
+    <form
+      action="/campgrounds/<%=oneCampground._id%>?_method=DELETE"
+      method="POST"
+    >
+      <button type="submit">Delete this campground</button>
+    </form>
+
+    <footer>
+      <a href="/campgrounds">See to all campgrounds</a>
+    </footer>
   </body>
 </html>

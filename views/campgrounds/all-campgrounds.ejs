@@ -10,6 +10,10 @@
     <h1>This is the page for all the campgrounds</h1>
     <h2>List of all Campgrounds</h2>
 
+    <div>
+      <a href="/campgrounds/new">Add a campground</a>
+    </div>
+
     <ul>
       <% for (let campground of allCampgrounds) { %>
       <a href="/campgrounds/<%=campground._id%>">
