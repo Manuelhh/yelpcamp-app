@@ -10,6 +10,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 // To be able to use all kinds of http requests:
 const methodOverride = require("method-override");
+// ???
+const ejsMate = require("ejs-mate");
 // to comunicate and interact with our mongodb database
 const mongoose = require("mongoose");
 // Mongoose database connection:
@@ -22,6 +24,8 @@ const campgroundsRouter = require("./routes/campgrounds");
 // creating the app:
 var app = express();
 
+// ???
+app.engine("ejs", ejsMate);
 // view engine setup so node knows where to look for the views files and what type of files they are
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
