@@ -6,6 +6,8 @@
     <form
       action="/campgrounds/<%= campgroundToEdit._id%>?_method=PUT"
       method="POST"
+      novalidate
+      class="validated-form"
     >
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
@@ -15,7 +17,9 @@
           id="title"
           name="title"
           value="<%= campgroundToEdit.title %> "
+          required
         />
+        <div class="valid-feedback">looks good!</div>
       </div>
 
       <div class="mb-3">
@@ -26,7 +30,9 @@
           id="location"
           name="location"
           value="<%= campgroundToEdit.location %> "
+          required
         />
+        <div class="valid-feedback">looks good!</div>
       </div>
 
       <div class="mb-3">
@@ -37,7 +43,9 @@
           id="image"
           name="image"
           value="<%= campgroundToEdit.image %> "
+          required
         />
+        <div class="valid-feedback">looks good!</div>
       </div>
 
       <div class="mb-3">
@@ -52,16 +60,25 @@
             aria-label="Username"
             aria-describedby="basic-addon1"
             name="price"
+            required
           />
+          <div class="valid-feedback">looks good!</div>
         </div>
       </div>
 
       <div class="mb-3">
         <label class="form-label" for="image">Description</label>
-        <textarea class="form-control" id="description" name="description">
+        <textarea
+          class="form-control"
+          id="description"
+          name="description"
+          required
+        >
         <%= campgroundToEdit.description %>
+        
     </textarea
         >
+        <div class="valid-feedback">looks good!</div>
       </div>
 
       <div class="mb-3">
