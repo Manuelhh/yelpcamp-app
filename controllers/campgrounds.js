@@ -1,5 +1,5 @@
 const Campground = require("../models/campground");
-const catchAsync = require("./utils/catchAsync");
+const catchAsync = require("../utils/catchAsync");
 
 const getAllCampgrounds = catchAsync(async (req, res, next) => {
   const allCampgrounds = await Campground.Campground.find({});
