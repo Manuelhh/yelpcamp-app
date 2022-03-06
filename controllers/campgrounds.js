@@ -21,7 +21,7 @@ const getOneCampground = async (req, res, next) => {
       oneCampground,
     });
   } catch (error) {
-    next(createError(404, "ID not found"));
+    next(createError(400, "ID not found"));
   }
 };
 
