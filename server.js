@@ -1,6 +1,6 @@
 //  used for generating errors for Node.js:
 var createError = require("http-errors");
-// node.js framework:
+// express framework:
 var express = require("express");
 // provides a lot of very useful functionality to access and interact with the file system:
 var path = require("path");
@@ -42,9 +42,11 @@ app.use(methodOverride("_method"));
 app.use("/", homeRouter);
 app.use("/campgrounds", campgroundsRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
+// ERROR HANDLING:
+
+// catches non-existing urls
+app.all("*", (req, res, next) => {
+  next(createError(404, "URL does not exist"));
 });
 
 // error handler

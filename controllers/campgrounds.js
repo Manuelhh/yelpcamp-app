@@ -1,50 +1,79 @@
+const req = require("express/lib/request");
 const Campground = require("../models/campground");
-const catchAsync = require("../utils/catchAsync");
+const createError = require("http-errors");
 
-const getAllCampgrounds = catchAsync(async (req, res, next) => {
-  const allCampgrounds = await Campground.Campground.find({});
-  res.render("campgrounds/all-campgrounds", {
-    allCampgrounds,
-  });
-});
+const getAllCampgrounds = async (req, res, next) => {
+  try {
+    const allCampgrounds = await Campground.Campground.find({});
+    res.render("campgrounds/all-campgrounds", {
+      allCampgrounds,
+    });
+  } catch (error) {
+    next(createError(500, error));
+  }
+};
 
-const getOneCampground = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const oneCampground = await Campground.Campground.findOne({ _id: id });
-  res.render("campgrounds/one-campground", {
-    oneCampground,
-  });
-});
+const getOneCampground = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const oneCampground = await Campground.Campground.findOne({ _id: id });
+    res.render("campgrounds/one-campground", {
+      oneCampground,
+    });
+  } catch (error) {
+    next(createError(404, "ID not found"));
+  }
+};
 
-const getNewCampgroundForm = catchAsync((req, res, next) => {
+const getNewCampgroundForm = (req, res, next) => {
   res.render("campgrounds/new-campground-form");
-});
+};
 
-const createACampground = catchAsync(async (req, res, next) => {
-  const newCampground = await new Campground.Campground(req.body);
-  await newCampground.save();
-  res.redirect(`/campgrounds/${newCampground._id}`);
-});
+const createACampground = async (req, res, next) => {
+  try {
+    const newCampground = await new Campground.Campground(req.body);
+    await newCampground.save();
+    res.redirect(`/campgrounds/${newCampground._id}`);
+  } catch (error) {
+    next(createError(500, error));
+  }
+};
 
-const editOneCampgroundForm = catchAsync(async (req, res, next) => {
-  const campgroundToEdit = await Campground.Campground.findById(req.params.id);
-  res.render("campgrounds/edit-campground-form", { campgroundToEdit });
-});
+const editOneCampgroundForm = async (req, res, next) => {
+  try {
+    const campgroundToEdit = await Campground.Campground.findById(
+      req.params.id
+    );
+    res.render("campgrounds/edit-campground-form", { campgroundToEdit });
+  } catch (error) {
+    next(createError(500, error));
+  }
+};
 
-const editOneCampground = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const campgroundToEdit = await Campground.Campground.findByIdAndUpdate(
-    id,
-    req.body
-  );
-  res.redirect(`/campgrounds/${id}`);
-});
+const editOneCampground = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const campgroundToEdit = await Campground.Campground.findByIdAndUpdate(
+      id,
+      req.body
+    );
+    res.redirect(`/campgrounds/${id}`);
+  } catch (error) {
+    next(createError(500, error));
+  }
+};
 
-const deleteOneCampground = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const campgroundToDelete = await Campground.Campground.findByIdAndDelete(id);
-  res.redirect("/campgrounds");
-});
+const deleteOneCampground = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const campgroundToDelete = await Campground.Campground.findByIdAndDelete(
+      id
+    );
+    res.redirect("/campgrounds");
+  } catch (error) {
+    next(createError(500, error));
+  }
+};
 
 module.exports = {
   getAllCampgrounds,
