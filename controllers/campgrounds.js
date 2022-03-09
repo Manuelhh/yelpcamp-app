@@ -1,6 +1,6 @@
-const req = require("express/lib/request");
-const Campground = require("../models/campground");
 const createError = require("http-errors");
+const Campground = require("../models/campground");
+const Review = require("../models/review");
 
 const getAllCampgrounds = async (req, res, next) => {
   try {
@@ -21,7 +21,7 @@ const getOneCampground = async (req, res, next) => {
       oneCampground,
     });
   } catch (error) {
-    next(createError(400, "ID not found"));
+    next(createError(500, "ID not found"));
   }
 };
 
@@ -35,7 +35,7 @@ const createACampground = async (req, res, next) => {
     await newCampground.save();
     res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (error) {
-    next(createError(500, error));
+    next(createError(400, error));
   }
 };
 
@@ -59,7 +59,7 @@ const editOneCampground = async (req, res, next) => {
     );
     res.redirect(`/campgrounds/${id}`);
   } catch (error) {
-    next(createError(500, error));
+    next(createError(400, error + ". Make sure the price field is a number"));
   }
 };
 
@@ -75,6 +75,20 @@ const deleteOneCampground = async (req, res, next) => {
   }
 };
 
+const createAReview = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const campground = await Campground.Campground.findById(id);
+    const newReview = await new Review.Review(req.body);
+    await newReview.save();
+    campground.reviews.push(newReview);
+    await campground.save();
+    res.send("works");
+  } catch (error) {
+    next(createError(400, error));
+  }
+};
+
 module.exports = {
   getAllCampgrounds,
   getOneCampground,
@@ -83,4 +97,5 @@ module.exports = {
   editOneCampgroundForm,
   editOneCampground,
   deleteOneCampground,
+  createAReview,
 };

@@ -42,12 +42,12 @@ app.use(methodOverride("_method"));
 app.use("/", homeRouter);
 app.use("/campgrounds", campgroundsRouter);
 
-// ERROR HANDLING:
-
 // catches non-existing urls
 app.all("*", (req, res, next) => {
-  next(createError(404, "URL does not exist"));
+  next(createError(404, "Page not found"));
 });
+
+// ERROR HANDLING:
 
 // error handler
 app.use(function (err, req, res, next) {
