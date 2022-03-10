@@ -16,11 +16,9 @@ const CampgroundSchema = new Schema({
   ],
 });
 
-const Campground = mongoose.model("Campground", CampgroundSchema);
-
 CampgroundSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {
-    await Review.Review.deleteMany({
+    await Review.remove({
       _id: {
         $in: doc.reviews,
       },
@@ -28,6 +26,4 @@ CampgroundSchema.post("findOneAndDelete", async function (doc) {
   }
 });
 
-module.exports = {
-  Campground,
-};
+module.exports = mongoose.model("Campground", CampgroundSchema);

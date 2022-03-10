@@ -4,7 +4,7 @@ const Review = require("../models/review");
 
 const getAllCampgrounds = async (req, res, next) => {
   try {
-    const allCampgrounds = await Campground.Campground.find({});
+    const allCampgrounds = await Campground.find({});
     res.render("campgrounds/all-campgrounds", {
       allCampgrounds,
     });
@@ -16,7 +16,7 @@ const getAllCampgrounds = async (req, res, next) => {
 const getOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const oneCampground = await Campground.Campground.findOne({
+    const oneCampground = await Campground.findOne({
       _id: id,
     }).populate("reviews");
     res.render("campgrounds/one-campground", {
@@ -33,7 +33,7 @@ const getNewCampgroundForm = (req, res, next) => {
 
 const createACampground = async (req, res, next) => {
   try {
-    const newCampground = await new Campground.Campground(req.body);
+    const newCampground = await new Campground(req.body);
     await newCampground.save();
     res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (error) {
@@ -43,9 +43,7 @@ const createACampground = async (req, res, next) => {
 
 const editOneCampgroundForm = async (req, res, next) => {
   try {
-    const campgroundToEdit = await Campground.Campground.findById(
-      req.params.id
-    );
+    const campgroundToEdit = await Campground.findById(req.params.id);
     res.render("campgrounds/edit-campground-form", { campgroundToEdit });
   } catch (error) {
     next(createError(500, error));
@@ -55,10 +53,7 @@ const editOneCampgroundForm = async (req, res, next) => {
 const editOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const campgroundToEdit = await Campground.Campground.findByIdAndUpdate(
-      id,
-      req.body
-    );
+    const campgroundToEdit = await Campground.findByIdAndUpdate(id, req.body);
     res.redirect(`/campgrounds/${id}`);
   } catch (error) {
     next(createError(400, error + ". Make sure the price field is a number"));
@@ -68,9 +63,7 @@ const editOneCampground = async (req, res, next) => {
 const deleteOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const campgroundToDelete = await Campground.Campground.findByIdAndDelete(
-      id
-    );
+    const campgroundToDelete = await Campground.findOneAndDelete(id);
     res.redirect("/campgrounds");
   } catch (error) {
     next(createError(500, error));
@@ -80,8 +73,8 @@ const deleteOneCampground = async (req, res, next) => {
 const createAReview = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const campground = await Campground.Campground.findById(id);
-    const newReview = await new Review.Review(req.body);
+    const campground = await Campground.findById(id);
+    const newReview = await new Review(req.body);
     await newReview.save();
     campground.reviews.push(newReview);
     await campground.save();
@@ -94,10 +87,10 @@ const createAReview = async (req, res, next) => {
 const deleteAReview = async (req, res, next) => {
   try {
     const { id, reviewId } = req.params;
-    await Campground.Campground.findByIdAndUpdate(id, {
+    await Campground.findByIdAndUpdate(id, {
       $pull: { reviews: reviewId },
     });
-    await Review.Review.findByIdAndDelete(reviewId);
+    await Review.findByIdAndDelete(reviewId);
 
     res.redirect(`/campgrounds/${id}`);
   } catch (error) {
