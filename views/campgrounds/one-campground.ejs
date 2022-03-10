@@ -1,7 +1,7 @@
 <% layout("layouts/boilerplate") %>
 
 <div class="row">
-  <div class="col-6 offset-3">
+  <div class="col-6">
     <div class="card mb-3">
       <img src="<%= oneCampground.image %> " class="card-img-top" alt="..." />
       <div class="card-body">
@@ -31,17 +31,16 @@
         </form>
       </div>
     </div>
+  </div>
 
-    <div class="reviews">
-      <!-- display reviews for each campround here if there are any, else don't show anything -->
-    </div>
-
+  <div class="col-6">
     <h2>Leave a review</h2>
 
     <form
-      action="/campgrounds/<%- oneCampground._id %>/reviews "
-      class="mb-3"
+      action="/campgrounds/<%- oneCampground._id %>/reviews"
       method="POST"
+      class="mb-3 validated-form"
+      novalidate
     >
       <div class="mb-3">
         <label class="form-label" for="rating">Rating</label>
@@ -62,9 +61,28 @@
           id="review"
           cols="30"
           rows="3"
+          required
         ></textarea>
+        <div class="valid-feedback">Looks good</div>
       </div>
       <button type="submit" class="btn btn-success">Submit</button>
     </form>
+
+    <% oneCampground.reviews.forEach(review => { %>
+
+    <div class="mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Rating: <%= review.rating %></h5>
+        <p class="card-text">Review: <%= review.body %></p>
+        <form
+          action="/campgrounds/<%=oneCampground._id%>/reviews/<%=review._id%>?_method=DELETE"
+          method="POST"
+        >
+          <button class="btn btn-sm btn-danger">Delete review</button>
+        </form>
+      </div>
+    </div>
+
+    <%}) %>
   </div>
 </div>

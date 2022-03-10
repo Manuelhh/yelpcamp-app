@@ -13,6 +13,8 @@ router.post(
   validateReview,
   campgroundsControllers.createAReview
 );
+router.delete("/:id/reviews/:reviewId", campgroundsControllers.deleteAReview);
+
 router.get("/:id/edit", campgroundsControllers.editOneCampgroundForm);
 router.put(
   "/:id/",

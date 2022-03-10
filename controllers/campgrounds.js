@@ -16,7 +16,9 @@ const getAllCampgrounds = async (req, res, next) => {
 const getOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const oneCampground = await Campground.Campground.findOne({ _id: id });
+    const oneCampground = await Campground.Campground.findOne({
+      _id: id,
+    }).populate("reviews");
     res.render("campgrounds/one-campground", {
       oneCampground,
     });
@@ -83,9 +85,23 @@ const createAReview = async (req, res, next) => {
     await newReview.save();
     campground.reviews.push(newReview);
     await campground.save();
-    res.send("works");
+    res.redirect(`/campgrounds/${campground._id}`);
   } catch (error) {
     next(createError(400, error));
+  }
+};
+
+const deleteAReview = async (req, res, next) => {
+  try {
+    const { id, reviewId } = req.params;
+    await Campground.Campground.findByIdAndUpdate(id, {
+      $pull: { reviews: reviewId },
+    });
+    await Review.Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/campgrounds/${id}`);
+  } catch (error) {
+    next(createError(500, error));
   }
 };
 
@@ -98,4 +114,5 @@ module.exports = {
   editOneCampground,
   deleteOneCampground,
   createAReview,
+  deleteAReview,
 };
