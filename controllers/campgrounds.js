@@ -34,6 +34,7 @@ const createACampground = async (req, res, next) => {
   try {
     const newCampground = await new Campground(req.body);
     await newCampground.save();
+    req.flash("successAdd", "Succesfully made a new campground");
     res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (error) {
     next(createError(400, error));

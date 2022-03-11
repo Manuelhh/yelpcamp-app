@@ -16,6 +16,8 @@ const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
 // express-session package for authentications and flash messages
 const session = require("express-session");
+// connect-flash for flash messages
+const flash = require("connect-flash");
 // Mongoose database connection:
 require("./config/database");
 
@@ -55,6 +57,15 @@ app.use(
     },
   })
 );
+
+// connect-flash
+app.use(flash());
+
+// flash middleware
+app.use((req, res, next) => {
+  res.locals.successAdd = req.flash("successAdd");
+  next();
+});
 
 // Main routes:
 app.use("/", homeRouter);
