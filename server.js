@@ -20,6 +20,7 @@ require("./config/database");
 // Routers:
 var homeRouter = require("./routes/home");
 const campgroundsRouter = require("./routes/campgrounds");
+const reviewsRouter = require("./routes/reviews");
 
 // creating the app:
 var app = express();
@@ -41,6 +42,7 @@ app.use(methodOverride("_method"));
 // Main routes:
 app.use("/", homeRouter);
 app.use("/campgrounds", campgroundsRouter);
+app.use("/campgrounds/:id/reviews", reviewsRouter);
 
 // catches non-existing urls
 app.all("*", (req, res, next) => {
