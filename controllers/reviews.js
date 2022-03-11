@@ -10,6 +10,7 @@ const createAReview = async (req, res, next) => {
     await newReview.save();
     campground.reviews.push(newReview);
     await campground.save();
+    req.flash("success", "Review added");
     res.redirect(`/campgrounds/${campground._id}`);
   } catch (error) {
     next(createError(400, error));
@@ -23,7 +24,7 @@ const deleteAReview = async (req, res, next) => {
       $pull: { reviews: reviewId },
     });
     await Review.findByIdAndDelete(reviewId);
-
+    req.flash("success", "Review deleted");
     res.redirect(`/campgrounds/${id}`);
   } catch (error) {
     next(createError(500, error));
