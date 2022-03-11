@@ -14,6 +14,8 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 // to comunicate and interact with our mongodb database
 const mongoose = require("mongoose");
+// express-session package for authentications and flash messages
+const session = require("express-session");
 // Mongoose database connection:
 require("./config/database");
 
@@ -38,6 +40,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
+
+// Athentication & flash express-session middleware
+
+app.use(
+  session({
+    secret: "cats", // used to parse the cookie sent
+    resave: false, // so server does not complain
+    saveUninitialized: true, // so server does not complain
+    cookie: {
+      httpOnly: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+  })
+);
 
 // Main routes:
 app.use("/", homeRouter);
