@@ -4,6 +4,10 @@ const campgroundsControllers = require("../controllers/campgrounds");
 const validateCampground = require("../config/middleware/validateCampground");
 const validateReview = require("../config/middleware/validateReview");
 
+// +++ Middleware section +++
+
+// +++ Routes section +++
+
 router.get("/", campgroundsControllers.getAllCampgrounds);
 router.get("/new", campgroundsControllers.getNewCampgroundForm);
 router.post("/", validateCampground, campgroundsControllers.createACampground);

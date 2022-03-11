@@ -1,4 +1,4 @@
-//  used for generating errors for Node.js:
+//  used for generating errors for express apps.js:
 var createError = require("http-errors");
 // express framework:
 var express = require("express");
