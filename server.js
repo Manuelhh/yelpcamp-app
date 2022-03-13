@@ -20,11 +20,18 @@ const session = require("express-session");
 const flash = require("connect-flash");
 // Mongoose database connection:
 require("./config/database");
+// for auth
+const passport = require("passport");
+// the passport strategy
+const localStrategy = require("passport-local");
+// user model for auth
+const User = require("./models/user");
 
 // Routers:
 var homeRouter = require("./routes/home");
 const campgroundsRouter = require("./routes/campgrounds");
 const reviewsRouter = require("./routes/reviews");
+const usersRouter = require("./routes/users");
 
 // creating the app:
 var app = express();
@@ -61,6 +68,14 @@ app.use(
 // connect-flash
 app.use(flash());
 
+// for auth
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // flash middleware
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
@@ -69,7 +84,8 @@ app.use((req, res, next) => {
 });
 
 // Main routes:
-app.use("/", homeRouter);
+app.use("/", usersRouter);
+app.use("/home", homeRouter);
 app.use("/campgrounds", campgroundsRouter);
 app.use("/campgrounds/:id/reviews", reviewsRouter);
 

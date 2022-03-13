@@ -8,7 +8,7 @@ mongoose
     // useFindAndModify: false,
   })
   .then(() => {
-    console.log("Connection open");
+    console.log("Serving realness");
   })
   .catch((err) => {
     console.log(err);
