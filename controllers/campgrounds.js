@@ -75,6 +75,7 @@ const editOneCampground = async (req, res, next) => {
 const deleteOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const campgroundToDelete = await Campground.findOneAndDelete(id);
     req.flash("success", "Campground succesfully deleted");
     res.redirect("/campgrounds");

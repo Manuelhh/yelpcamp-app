@@ -14,7 +14,13 @@ const registerUser = async (req, res, next) => {
     const { username, email, password } = req.body;
     const user = await new User({ username, email });
     const registeredUser = await User.register(user, password);
-    console.log(registeredUser);
+
+    req.login(registeredUser, (error) => {
+      if (error) {
+        next(createError(500, error));
+      }
+    });
+
     req.flash("success", "You have succesfully registered");
     res.redirect("/campgrounds");
   } catch (error) {
@@ -27,9 +33,22 @@ const getLoginForm = (req, res, next) => {
   res.render("users/login");
 };
 
+const login = async (req, res, next) => {
+  req.flash("success", "Welcome back");
+  res.redirect("/campgrounds");
+};
+
+const logout = (req, res) => {
+  req.logout();
+  req.flash("success", "see ya bitch");
+  res.redirect("/home");
+};
+
 module.exports = {
   getHome,
   getRegisterForm,
   registerUser,
   getLoginForm,
+  login,
+  logout,
 };
