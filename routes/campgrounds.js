@@ -20,7 +20,11 @@ router.post(
   validateCampground,
   campgroundsControllers.createACampground
 );
-router.get("/:id", campgroundsControllers.getOneCampground);
+router.get(
+  "/:id",
+  isUserAuthenticated,
+  campgroundsControllers.getOneCampground
+);
 router.get(
   "/:id/edit",
   isUserAuthenticated,

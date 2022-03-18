@@ -12,6 +12,8 @@ const getAllCampgrounds = async (req, res, next) => {
   }
 };
 
+// here
+
 const getOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;

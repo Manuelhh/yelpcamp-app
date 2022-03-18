@@ -34,8 +34,10 @@ const getLoginForm = (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  req.flash("success", "Welcome back");
-  res.redirect("/campgrounds");
+  req.flash("success", "Hi bitch!");
+  const redirectUrl = req.session.originalUrl || "/campgrounds";
+  delete req.session.originalUrl;
+  res.redirect(redirectUrl);
 };
 
 const logout = (req, res) => {
