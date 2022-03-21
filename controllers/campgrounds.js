@@ -12,14 +12,20 @@ const getAllCampgrounds = async (req, res, next) => {
   }
 };
 
-// here
-
 const getOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
     const oneCampground = await Campground.findOne({
       _id: id,
-    }).populate("reviews");
+    })
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "author",
+        },
+      })
+      .populate("author");
+
     if (!oneCampground) {
       req.flash("error", "Campground not found");
       res.redirect("/campgrounds");
@@ -39,6 +45,7 @@ const getNewCampgroundForm = (req, res, next) => {
 const createACampground = async (req, res, next) => {
   try {
     const newCampground = await new Campground(req.body);
+    newCampground.author = req.user._id;
     await newCampground.save();
     req.flash("success", "Succesfully made a new campground");
     res.redirect(`/campgrounds/${newCampground._id}`);
@@ -49,12 +56,15 @@ const createACampground = async (req, res, next) => {
 
 const editOneCampgroundForm = async (req, res, next) => {
   try {
-    const campgroundToEdit = await Campground.findById(req.params.id);
-    if (!campgroundToEdit) {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+
+    if (!campground) {
       req.flash("error", "Campground not found");
       res.redirect("/campgrounds");
     }
-    res.render("campgrounds/edit-campground-form", { campgroundToEdit });
+
+    res.render("campgrounds/edit-campground-form", { campground });
   } catch (error) {
     next(createError(500, error));
   }
@@ -77,7 +87,7 @@ const editOneCampground = async (req, res, next) => {
 const deleteOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
+
     const campgroundToDelete = await Campground.findOneAndDelete(id);
     req.flash("success", "Campground succesfully deleted");
     res.redirect("/campgrounds");

@@ -5,17 +5,23 @@ const validateUser = require("../config/middleware/validateUser");
 const passport = require("passport");
 
 router.get("/", usersControllers.getHome);
-router.get("/register", usersControllers.getRegisterForm);
-router.post("/register", validateUser, usersControllers.registerUser);
-router.get("/login", usersControllers.getLoginForm);
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/login",
-  }),
-  usersControllers.login
-);
+
+router
+  .route("/register")
+  .get(usersControllers.getRegisterForm)
+  .post(validateUser, usersControllers.registerUser);
+
+router
+  .route("/login")
+  .get(usersControllers.getLoginForm)
+  .post(
+    passport.authenticate("local", {
+      failureFlash: true,
+      failureRedirect: "/login",
+    }),
+    usersControllers.login
+  );
+
 router.get("/logout", usersControllers.logout);
 
 module.exports = router;

@@ -7,8 +7,9 @@ const createAReview = async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     const newReview = await new Review(req.body);
-    await newReview.save();
+    newReview.author = req.user._id;
     campground.reviews.push(newReview);
+    await newReview.save();
     await campground.save();
     req.flash("success", "Review added");
     res.redirect(`/campgrounds/${campground._id}`);

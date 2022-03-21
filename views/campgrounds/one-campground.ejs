@@ -12,10 +12,18 @@
         <li class="list-group-item text-muted">
           <%= oneCampground.location %>
         </li>
+
+        <li class="list-group-item text-muted">
+          submited by: <%= oneCampground.author.username %>
+        </li>
+
         <li class="list-group-item">
           $<%= oneCampground.price %>.00 per night
         </li>
       </ul>
+
+      <% if(currentUser && oneCampground.author.equals(currentUser._id)) { %>
+
       <div class="card-body">
         <a
           href="/campgrounds/<%=oneCampground._id%>/edit"
@@ -30,10 +38,14 @@
           <button class="btn btn-danger" type="submit">Delete</button>
         </form>
       </div>
+
+      <% } %>
     </div>
   </div>
 
   <div class="col-6">
+    <% if(currentUser) { %>
+
     <h2>Leave a review</h2>
 
     <form
@@ -68,18 +80,25 @@
       <button type="submit" class="btn btn-success">Submit</button>
     </form>
 
-    <% oneCampground.reviews.forEach(review => { %>
+    <% } %> <% oneCampground.reviews.forEach(review => { %>
 
     <div class="mb-3 card">
       <div class="card-body">
         <h5 class="card-title">Rating: <%= review.rating %></h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          Review by: <%= review.author.username%>
+        </h6>
         <p class="card-text">Review: <%= review.body %></p>
+
+        <% if(currentUser && review.author.equals(currentUser._id)) { %>
+
         <form
           action="/campgrounds/<%=oneCampground._id%>/reviews/<%=review._id%>?_method=DELETE"
           method="POST"
         >
           <button class="btn btn-sm btn-danger">Delete review</button>
         </form>
+        <% } %>
       </div>
     </div>
 

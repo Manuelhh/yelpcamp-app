@@ -3,43 +3,43 @@ var router = express.Router();
 const campgroundsControllers = require("../controllers/campgrounds");
 const validateCampground = require("../config/middleware/validateCampground");
 const isUserAuthenticated = require("../config/middleware/isUserAuthenticated");
+const isAuthor = require("../config/middleware/isAuthor");
 
 // +++ Middleware section +++
 
 // +++ Routes section +++
 
 router.get("/", campgroundsControllers.getAllCampgrounds);
-router.get(
-  "/new",
-  isUserAuthenticated,
-  campgroundsControllers.getNewCampgroundForm
-);
-router.post(
-  "/new",
-  isUserAuthenticated,
-  validateCampground,
-  campgroundsControllers.createACampground
-);
-router.get(
-  "/:id",
-  isUserAuthenticated,
-  campgroundsControllers.getOneCampground
-);
+
+router
+  .route("/new")
+  .get(isUserAuthenticated, campgroundsControllers.getNewCampgroundForm)
+  .post(
+    isUserAuthenticated,
+    validateCampground,
+    campgroundsControllers.createACampground
+  );
+
+router
+  .route("/:id")
+  .get(campgroundsControllers.getOneCampground)
+  .put(
+    isUserAuthenticated,
+    isAuthor,
+    validateCampground,
+    campgroundsControllers.editOneCampground
+  )
+  .delete(
+    isUserAuthenticated,
+    isAuthor,
+    campgroundsControllers.deleteOneCampground
+  );
+
 router.get(
   "/:id/edit",
   isUserAuthenticated,
+  isAuthor,
   campgroundsControllers.editOneCampgroundForm
-);
-router.put(
-  "/:id",
-  isUserAuthenticated,
-  validateCampground,
-  campgroundsControllers.editOneCampground
-);
-router.delete(
-  "/:id",
-  isUserAuthenticated,
-  campgroundsControllers.deleteOneCampground
 );
 
 module.exports = router;
