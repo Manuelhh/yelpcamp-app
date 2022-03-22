@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 //  used for generating errors for express apps.js:
 var createError = require("http-errors");
 // express framework:

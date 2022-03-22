@@ -4,6 +4,7 @@ const campgroundsControllers = require("../controllers/campgrounds");
 const validateCampground = require("../config/middleware/validateCampground");
 const isUserAuthenticated = require("../config/middleware/isUserAuthenticated");
 const isAuthor = require("../config/middleware/isAuthor");
+const upload = require("../config/middleware/multer");
 
 // +++ Middleware section +++
 
@@ -16,6 +17,7 @@ router
   .get(isUserAuthenticated, campgroundsControllers.getNewCampgroundForm)
   .post(
     isUserAuthenticated,
+    upload.array("images"),
     validateCampground,
     campgroundsControllers.createACampground
   );

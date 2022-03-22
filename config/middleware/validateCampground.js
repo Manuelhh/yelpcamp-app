@@ -5,7 +5,7 @@ module.exports = validateCampground = (req, res, next) => {
   const campgroundSchemaValidator = Joi.object({
     title: Joi.string().required(),
     price: Joi.number().required().min(0),
-    image: Joi.string().required(),
+    images: Joi.array(),
     location: Joi.string().required(),
     description: Joi.string().required(),
   });

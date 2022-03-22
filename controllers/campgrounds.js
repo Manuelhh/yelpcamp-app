@@ -45,8 +45,13 @@ const getNewCampgroundForm = (req, res, next) => {
 const createACampground = async (req, res, next) => {
   try {
     const newCampground = await new Campground(req.body);
+    newCampground.images = req.files.map((f) => ({
+      url: f.path,
+      filename: f.filename,
+    }));
     newCampground.author = req.user._id;
     await newCampground.save();
+    console.log(newCampground);
     req.flash("success", "Succesfully made a new campground");
     res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (error) {
