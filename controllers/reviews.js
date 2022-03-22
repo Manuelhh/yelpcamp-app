@@ -14,7 +14,7 @@ const createAReview = async (req, res, next) => {
     req.flash("success", "Review added");
     res.redirect(`/campgrounds/${campground._id}`);
   } catch (error) {
-    next(createError(400, error));
+    next(createError(500, error));
   }
 };
 
