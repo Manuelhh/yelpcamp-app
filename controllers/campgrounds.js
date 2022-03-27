@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const Campground = require("../models/campground");
+const cloudinary = require("../config/middleware/multer");
 
 const getAllCampgrounds = async (req, res, next) => {
   try {
@@ -78,14 +79,36 @@ const editOneCampgroundForm = async (req, res, next) => {
 const editOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const campgroundToEdit = await Campground.findByIdAndUpdate(id, req.body);
-    req.flash(
-      "success",
-      `Succesfully edited ${campgroundToEdit.title} campground`
-    );
+
+    const oldCamp = await Campground.findById(id);
+    const oldImages = oldCamp.images;
+
+    const editedCamp = await Campground.findByIdAndUpdate(id, req.body);
+    if (req.files.length === 0) {
+      console.log("no files");
+      editedCamp.images = oldImages;
+    } else if (req.files) {
+      const newImages = req.files.map((f) => ({
+        url: f.path,
+        filename: f.filename,
+      }));
+      editedCamp.images.push(...newImages);
+    }
+    await editedCamp.save();
+
+    if (req.body.deleteImages) {
+      for (let filename of req.body.deleteImages) {
+        await cloudinary.cloudinary.uploader.destroy(filename);
+      }
+      await editedCamp.updateOne({
+        $pull: { images: { filename: { $in: req.body.deleteImages } } },
+      });
+    }
+
+    req.flash("success", `Succesfully edited ${editedCamp.title} campground`);
     res.redirect(`/campgrounds/${id}`);
   } catch (error) {
-    next(createError(400, error + ". Make sure the price field is a number"));
+    next(createError(400, error));
   }
 };
 

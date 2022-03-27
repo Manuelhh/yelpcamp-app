@@ -3,11 +3,12 @@ const Joi = require("joi");
 
 module.exports = validateCampground = (req, res, next) => {
   const campgroundSchemaValidator = Joi.object({
-    title: Joi.string().required(),
-    price: Joi.number().required().min(0),
+    title: Joi.string(),
+    price: Joi.number().min(0),
     images: Joi.array(),
-    location: Joi.string().required(),
-    description: Joi.string().required(),
+    location: Joi.string(),
+    description: Joi.string(),
+    deleteImages: Joi.array(),
   });
   const { error } = campgroundSchemaValidator.validate(req.body);
   if (error) {

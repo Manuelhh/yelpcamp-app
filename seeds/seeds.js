@@ -18,16 +18,12 @@ const seedDb = async () => {
       title: `${sample(descriptors)} ${sample(places)}`,
       images: [
         {
-          url: "https://res.cloudinary.com/mangud/image/upload/v1648316582/Yelpcamp/ykq2mn7cpn0wsregxeq1.jpg",
-          filename: "Yelpcamp/ykq2mn7cpn0wsregxeq1",
+          url: "https://res.cloudinary.com/mangud/image/upload/v1648394052/Yelpcamp/qeyircts6xhxapn5ijya.jpg",
+          filename: "Yelpcamp/qeyircts6xhxapn5ijya",
         },
         {
-          url: "https://res.cloudinary.com/mangud/image/upload/v1648316582/Yelpcamp/dnhov2lq26lplnkqj0fn.jpg",
-          filename: "Yelpcamp/dnhov2lq26lplnkqj0fn",
-        },
-        {
-          url: "https://res.cloudinary.com/mangud/image/upload/v1648316582/Yelpcamp/tgcrycil7ii3ubpp1kvf.png",
-          filename: "Yelpcamp/tgcrycil7ii3ubpp1kvf",
+          url: "https://res.cloudinary.com/mangud/image/upload/v1648394052/Yelpcamp/ngz1dp8q2hjeywwqwceu.jpg",
+          filename: "Yelpcamp/ngz1dp8q2hjeywwqwceu",
         },
       ],
       description:
@@ -38,4 +34,4 @@ const seedDb = async () => {
   }
 };
 
-seedDb();
+// seedDb();
