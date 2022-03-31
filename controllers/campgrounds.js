@@ -1,6 +1,9 @@
 const createError = require("http-errors");
 const Campground = require("../models/campground");
 const cloudinary = require("../config/middleware/multer");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapboxToken = process.env.MAPBOX_TOKEN;
+const geoCoder = mbxGeocoding({ accessToken: mapboxToken });
 
 const getAllCampgrounds = async (req, res, next) => {
   try {
@@ -43,22 +46,33 @@ const getNewCampgroundForm = (req, res, next) => {
   res.render("campgrounds/new-campground-form");
 };
 
+//
+
 const createACampground = async (req, res, next) => {
   try {
+    const geoData = await geoCoder
+      .forwardGeocode({
+        query: req.body.location,
+        limit: 1,
+      })
+      .send();
     const newCampground = await new Campground(req.body);
+    newCampground.geometry = geoData.body.features[0].geometry;
     newCampground.images = req.files.map((f) => ({
       url: f.path,
       filename: f.filename,
     }));
     newCampground.author = req.user._id;
     await newCampground.save();
-    console.log(newCampground);
+    console.log(newCampground); // here
     req.flash("success", "Succesfully made a new campground");
     res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (error) {
     next(createError(400, error));
   }
 };
+
+//
 
 const editOneCampgroundForm = async (req, res, next) => {
   try {
@@ -79,13 +93,18 @@ const editOneCampgroundForm = async (req, res, next) => {
 const editOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const geoData = await geoCoder
+      .forwardGeocode({
+        query: req.body.location,
+        limit: 1,
+      })
+      .send();
 
     const oldCamp = await Campground.findById(id);
     const oldImages = oldCamp.images;
 
     const editedCamp = await Campground.findByIdAndUpdate(id, req.body);
     if (req.files.length === 0) {
-      console.log("no files");
       editedCamp.images = oldImages;
     } else if (req.files) {
       const newImages = req.files.map((f) => ({
@@ -94,6 +113,7 @@ const editOneCampground = async (req, res, next) => {
       }));
       editedCamp.images.push(...newImages);
     }
+    editedCamp.geometry = geoData.body.features[0].geometry;
     await editedCamp.save();
 
     if (req.body.deleteImages) {

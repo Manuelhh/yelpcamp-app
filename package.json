@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.13.3",
     "and": "0.0.3",
     "cloudinary": "^1.28.1",
     "connect-flash": "^0.1.1",
