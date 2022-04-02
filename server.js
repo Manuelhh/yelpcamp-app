@@ -1,6 +1,8 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+// if (process.env.NODE_ENV !== "production") {
+//   require("dotenv").config();
+// }
+
+require("dotenv").config();
 
 //  used for generating errors for express apps.js:
 var createError = require("http-errors");
@@ -32,6 +34,8 @@ const localStrategy = require("passport-local");
 const User = require("./models/user");
 // to protect query strings
 const mongoSanitize = require("express-mongo-sanitize");
+// security headers
+// const helmet = require("helmet");
 
 // Routers:
 var homeRouter = require("./routes/home");
@@ -60,7 +64,7 @@ app.use(mongoSanitize({ replaceWith: "_" }));
 // Athentication & flash & express-session middleware
 
 const sessionConfig = {
-  name: "session", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.
+  name: "session", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.g
   secret: "cats", // used to parse the cookie sent
   resave: false, // so server does not complain
   saveUninitialized: true, // so server does not complain
@@ -76,6 +80,12 @@ app.use(session(sessionConfig));
 // connect-flash
 app.use(flash());
 
+// security headers
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: false,
+//   })
+// );
 // for auth
 
 app.use(passport.initialize());
@@ -86,7 +96,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // flash middleware/locals object that is available in every ejs tempalte
 app.use((req, res, next) => {
-  console.log(req.query);
+  console.log("here", process.env.NODE_ENV);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
