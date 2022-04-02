@@ -57,20 +57,21 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
 app.use(mongoSanitize({ replaceWith: "_" }));
 
-// Athentication & flash express-session middleware
+// Athentication & flash & express-session middleware
 
-app.use(
-  session({
-    secret: "cats", // used to parse the cookie sent
-    resave: false, // so server does not complain
-    saveUninitialized: true, // so server does not complain
-    cookie: {
-      httpOnly: true,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
-  })
-);
+const sessionConfig = {
+  name: "session", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.
+  secret: "cats", // used to parse the cookie sent
+  resave: false, // so server does not complain
+  saveUninitialized: true, // so server does not complain
+  cookie: {
+    httpOnly: true,
+    // secure: true, // this cookie will only work if app navigating on http securee
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+app.use(session(sessionConfig));
 
 // connect-flash
 app.use(flash());
