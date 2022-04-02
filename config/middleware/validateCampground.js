@@ -1,13 +1,13 @@
 const createError = require("http-errors");
-const Joi = require("joi");
+const Joi = require("../middleware/BaseJoi");
 
 module.exports = validateCampground = (req, res, next) => {
   const campgroundSchemaValidator = Joi.object({
-    title: Joi.string(),
+    title: Joi.string().escapeHTML(),
     price: Joi.number().min(0),
     images: Joi.array(),
-    location: Joi.string(),
-    description: Joi.string(),
+    location: Joi.string().escapeHTML(),
+    description: Joi.string().escapeHTML(),
     deleteImages: Joi.array(),
   });
   const { error } = campgroundSchemaValidator.validate(req.body);

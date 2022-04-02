@@ -1,11 +1,11 @@
 const createError = require("http-errors");
-const Joi = require("joi");
+const Joi = require("../middleware/BaseJoi");
 
 module.exports = validateUser = (req, res, next) => {
   const userSchemaValidator = Joi.object({
-    username: Joi.string().required(),
-    email: Joi.string().required(),
-    password: Joi.string().required(),
+    username: Joi.string().required().escapeHTML(),
+    email: Joi.string().required().escapeHTML(),
+    password: Joi.string().required().escapeHTML(),
   });
 
   const { error } = userSchemaValidator.validate(req.body);

@@ -30,6 +30,8 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 // user model for auth
 const User = require("./models/user");
+// to protect query strings
+const mongoSanitize = require("express-mongo-sanitize");
 
 // Routers:
 var homeRouter = require("./routes/home");
@@ -53,6 +55,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
+app.use(mongoSanitize({ replaceWith: "_" }));
 
 // Athentication & flash express-session middleware
 
@@ -82,6 +85,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // flash middleware/locals object that is available in every ejs tempalte
 app.use((req, res, next) => {
+  console.log(req.query);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
