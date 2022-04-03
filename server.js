@@ -34,6 +34,8 @@ const localStrategy = require("passport-local");
 const User = require("./models/user");
 // to protect query strings
 const mongoSanitize = require("express-mongo-sanitize");
+// session storage
+const MongoStore = require("connect-mongo");
 
 // Routers:
 var homeRouter = require("./routes/home");
@@ -62,7 +64,11 @@ app.use(mongoSanitize({ replaceWith: "_" }));
 // Athentication & flash & express-session middleware
 
 const sessionConfig = {
-  name: "session", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.g
+  store: MongoStore.create({
+    mongoUrl: "mongodb://localhost:27017/yelp-camp",
+    touchAfter: 24 * 60 * 60,
+  }),
+  name: "sessions", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.g
   secret: "cats", // used to parse the cookie sent
   resave: false, // so server does not complain
   saveUninitialized: true, // so server does not complain
@@ -73,6 +79,7 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
+
 app.use(session(sessionConfig));
 
 // connect-flash
