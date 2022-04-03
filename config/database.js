@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-
+const dbUrl = process.env.DB_URL;
+// "mongodb://localhost:27017/yelp-camp"
 mongoose
-  .connect("mongodb://localhost:27017/yelp-camp", {
+  .connect(dbUrl, {
     useNewUrlParser: true,
     // useCreateIndex: true,
     useUnifiedTopology: true,
