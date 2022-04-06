@@ -64,7 +64,7 @@ const createACampground = async (req, res, next) => {
     }));
     newCampground.author = req.user._id;
     await newCampground.save();
-    console.log(newCampground); 
+    console.log(newCampground);
     req.flash("success", "Succesfully made a new campground");
     res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (error) {
@@ -102,7 +102,6 @@ const editOneCampground = async (req, res, next) => {
 
     const oldCamp = await Campground.findById(id);
     const oldImages = oldCamp.images;
-
     const editedCamp = await Campground.findByIdAndUpdate(id, req.body);
     if (req.files.length === 0) {
       editedCamp.images = oldImages;
@@ -119,12 +118,12 @@ const editOneCampground = async (req, res, next) => {
     if (req.body.deleteImages) {
       for (let filename of req.body.deleteImages) {
         await cloudinary.cloudinary.uploader.destroy(filename);
-    
+        console.log("This is the file name", req.body.deleteImages);
+      }
       await editedCamp.updateOne({
         $pull: { images: { filename: { $in: req.body.deleteImages } } },
       });
     }
-
     req.flash("success", `Succesfully edited ${editedCamp.title} campground`);
     res.redirect(`/campgrounds/${id}`);
   } catch (error) {
@@ -135,8 +134,11 @@ const editOneCampground = async (req, res, next) => {
 const deleteOneCampground = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    const campgroundToDelete = await Campground.findOneAndDelete(id);
+    const camp = await Campground.findById(id);
+    for (let img of camp.images) {
+      await cloudinary.cloudinary.uploader.destroy(img.filename);
+    }
+    await Campground.findOneAndDelete(id);
     req.flash("success", "Campground succesfully deleted");
     res.redirect("/campgrounds");
   } catch (error) {
