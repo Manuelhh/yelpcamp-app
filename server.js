@@ -64,13 +64,13 @@ app.use(mongoSanitize({ replaceWith: "_" }));
 // Athentication & flash & express-session middleware
 
 const sessionConfig = {
-  store: MongoStore.create({
+  store: new MongoStore({
     mongoUrl: process.env.DB_URL,
-    secret: process.env.SECRET || "development secret",
+    secret: process.env.SECRET || "cats",
     touchAfter: 24 * 60 * 60,
   }),
   name: "sessions", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.g
-  secret: process.env.SECRET || "development secret", // used to parse the cookie sent
+  secret: process.env.SECRET || "cats", // used to parse the cookie sent
   resave: false, // so server does not complain
   saveUninitialized: true, // so server does not complain
   cookie: {
