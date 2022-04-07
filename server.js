@@ -65,11 +65,12 @@ app.use(mongoSanitize({ replaceWith: "_" }));
 
 const sessionConfig = {
   store: MongoStore.create({
-    mongoUrl: "mongodb://localhost:27017/yelp-camp",
+    mongoUrl: process.env.DB_URL,
+    secret: process.env.SECRET || "development secret",
     touchAfter: 24 * 60 * 60,
   }),
   name: "sessions", // provides the cookie with a name, it is recommended to change it to prevent easy hack of session id data.g
-  secret: "cats", // used to parse the cookie sent
+  secret: process.env.SECRET || "development secret", // used to parse the cookie sent
   resave: false, // so server does not complain
   saveUninitialized: true, // so server does not complain
   cookie: {
